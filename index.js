@@ -20,6 +20,39 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(clerkMiddleware());
 
+
+const singers={
+  "singers": [
+    {
+      "name": "The Weeknd",
+      "famous_song": "Blinding Lights"
+    },
+    {
+      "name": "Travis Scott",
+      "famous_song": "SICKO MODE"
+    },
+    {
+      "name": "Lana Del Rey",
+      "famous_song": "Summertime Sadness"
+    },
+    {
+      "name": "Ariana Grande",
+      "famous_song": "7 rings"
+    },
+    {
+      "name": "Olivia Rodrigo",
+      "famous_song": "drivers license"
+    },
+    {
+      "name": "Billie Eilish",
+      "famous_song": "bad guy"
+    }
+  ]
+}
+
+redisClient.set("singers", JSON.stringify(singers));
+
+
 // ✅ Protected test route
 app.get("/",requireAuth({ unauthorized: handleUnauthorized }),  (req, res) => {
   redisClient.set("test", "test");
@@ -51,6 +84,11 @@ app.get("/redisget", async (req, res) => {
   res.json({ text});
 });
 
+
+app.get("/singers", async (req, res) => {
+  const text = await redisClient.get("singers");
+  res.json({ text});
+});
 
 
 
